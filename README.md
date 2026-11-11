@@ -1,0 +1,1 @@
+# dovanu-ideju-organizatorius
