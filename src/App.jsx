@@ -145,9 +145,74 @@ function AuthScreen({ onSignupSession }) {
   )
 }
 
-function GiftIdeasHome({ onSignOut, successMessage }) {
+function occasionsErrorMessage(error) {
+  const message = `${error?.code ?? ''} ${error?.message ?? ''}`.toLowerCase()
+
+  if (message.includes('row-level security') || message.includes('permission denied')) {
+    return 'Neturite teisės atlikti šio veiksmo. Atsijunkite ir prisijunkite iš naujo.'
+  }
+  if (message.includes('network') || message.includes('fetch')) {
+    return 'Nepavyko susisiekti su duomenų baze. Patikrinkite interneto ryšį ir bandykite dar kartą.'
+  }
+  return 'Progų įkelti arba išsaugoti nepavyko. Bandykite dar kartą.'
+}
+
+function GiftIdeasHome({ userId, onSignOut, successMessage }) {
   const [pending, setPending] = useState(false)
   const [error, setError] = useState('')
+  const [occasions, setOccasions] = useState([])
+  const [loadingOccasions, setLoadingOccasions] = useState(true)
+  const [occasionsError, setOccasionsError] = useState('')
+  const [occasionName, setOccasionName] = useState('')
+  const [savingOccasion, setSavingOccasion] = useState(false)
+
+  useEffect(() => {
+    let active = true
+
+    async function loadOccasions() {
+      setLoadingOccasions(true)
+      setOccasionsError('')
+
+      const { data, error: loadError } = await supabase
+        .from('occasions')
+        .select('id, user_id, name, created_at')
+        .order('created_at', { ascending: false })
+
+      if (!active) return
+      if (loadError) {
+        setOccasionsError(occasionsErrorMessage(loadError))
+      } else {
+        setOccasions(data ?? [])
+      }
+      setLoadingOccasions(false)
+    }
+
+    loadOccasions()
+    return () => { active = false }
+  }, [userId])
+
+  async function handleCreateOccasion(event) {
+    event.preventDefault()
+    const name = occasionName.trim()
+    if (!name || savingOccasion) return
+
+    setSavingOccasion(true)
+    setOccasionsError('')
+
+    const { data, error: insertError } = await supabase
+      .from('occasions')
+      .insert({ name })
+      .select('id, user_id, name, created_at')
+      .single()
+
+    if (insertError) {
+      setOccasionsError(occasionsErrorMessage(insertError))
+    } else if (data) {
+      setOccasions((current) => [data, ...current])
+      setOccasionName('')
+    }
+    setSavingOccasion(false)
+  }
 
   async function handleSignOut() {
     if (pending) return
@@ -183,6 +248,49 @@ function GiftIdeasHome({ onSignOut, successMessage }) {
       </header>
       {successMessage && <p className="auth-notice success home-notice" role="status" aria-live="polite">{successMessage}</p>}
       {error && <p className="signout-error" role="alert">{error}</p>}
+
+      <section className="occasions-section" aria-labelledby="occasions-title">
+        <div className="occasions-heading">
+          <div>
+            <p className="eyebrow">Svarbios akimirkos <span>✳</span></p>
+            <h2 id="occasions-title">Mano <em>progos.</em></h2>
+          </div>
+        </div>
+        <form className="occasion-form" onSubmit={handleCreateOccasion}>
+          <label htmlFor="occasion-name">Progos pavadinimas</label>
+          <div className="occasion-form-row">
+            <input
+              id="occasion-name"
+              name="occasionName"
+              type="text"
+              value={occasionName}
+              onChange={(event) => setOccasionName(event.target.value)}
+              placeholder="Pavyzdžiui, Mamos gimtadienis"
+              required
+              disabled={savingOccasion}
+            />
+            <button className="auth-submit" type="submit" disabled={savingOccasion || !occasionName.trim()}>
+              {savingOccasion ? 'Išsaugoma…' : 'Pridėti progą'}
+              {!savingOccasion && <span aria-hidden="true">↗</span>}
+            </button>
+          </div>
+        </form>
+        {occasionsError && <p className="auth-notice error occasions-notice" role="alert">{occasionsError}</p>}
+        {loadingOccasions ? (
+          <p className="occasions-state" role="status" aria-live="polite">Įkeliamos progos…</p>
+        ) : occasions.length === 0 ? (
+          <p className="occasions-state">Kol kas progų nėra. Sukurkite pirmąją progą aukščiau.</p>
+        ) : (
+          <ul className="occasion-list" aria-label="Jūsų progos">
+            {occasions.map((occasion) => (
+              <li className="occasion-item" key={occasion.id}>
+                <span className="occasion-date" aria-hidden="true">♡</span>
+                <span>{occasion.name}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
 
       <section className="hero" id="pradzia">
         <div className="hero-copy">
@@ -270,7 +378,7 @@ function App() {
   }
 
   if (!session) return <AuthScreen onSignupSession={setSignupSuccessMessage} />
-  return <GiftIdeasHome onSignOut={() => setSession(null)} successMessage={signupSuccessMessage} />
+  return <GiftIdeasHome userId={session.user.id} onSignOut={() => setSession(null)} successMessage={signupSuccessMessage} />
 }
 
 export default App
