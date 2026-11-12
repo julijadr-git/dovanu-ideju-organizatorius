@@ -110,6 +110,41 @@ h1 em, h2 em { color: var(--green); font-weight: 500; }
 .occasion-list { list-style: none; padding: 0; margin: 0; max-width: 680px; border-top: 1px solid var(--line); }
 .occasion-item { display: flex; align-items: center; gap: 14px; min-height: 62px; padding: 13px 0; border-bottom: 1px solid var(--line); font: 500 17px 'Playfair Display', serif; }
 .occasion-date { display: grid; place-items: center; width: 32px; height: 32px; flex: 0 0 32px; border-radius: 50%; color: var(--green); background: #e9e9dc; font: 16px 'DM Sans', sans-serif; }
+.create-open-button { min-width: 125px; }
+.gift-manager { display: grid; grid-template-columns: minmax(190px, .72fr) 1.28fr; gap: 42px; align-items: start; }
+.occasion-list { display: flex; flex-direction: column; }
+.occasion-select { width: 100%; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; cursor: pointer; }
+.occasion-select.selected { background: #eeede5; }
+.occasion-arrow { margin-left: auto; color: #89917d; }
+.gifts-panel { min-width: 0; }
+.gifts-heading { display: flex; justify-content: space-between; align-items: end; gap: 16px; margin-bottom: 16px; }
+.gifts-heading .eyebrow { margin-bottom: 8px; }
+.gifts-heading h3 { margin: 0; font: 500 25px 'Playfair Display', serif; }
+.text-action { border: 0; background: transparent; color: var(--green); padding: 8px 0; font: 600 11px 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; }
+.text-action:disabled { opacity: .5; cursor: not-allowed; }
+.gift-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--line); }
+.gift-item { display: flex; align-items: center; gap: 14px; min-height: 62px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.gift-title { flex: 1; font: 500 16px 'Playfair Display', serif; }
+.priority-badge { color: #72786c; background: #eeede5; border-radius: 20px; padding: 5px 9px; font-size: 10px; white-space: nowrap; }
+.priority-badge.high { color: #8c4034; background: #f8eae5; }
+.edit-action { padding-left: 8px; }
+.gift-edit-form { display: flex; flex: 1; align-items: center; gap: 8px; }
+.gift-edit-form input, .create-form input, .create-form select { min-width: 0; height: 44px; border: 1px solid #d8d9cf; border-radius: 2px; outline: none; background: #fffefa; color: var(--ink); padding: 0 12px; font: 13px 'DM Sans', sans-serif; }
+.gift-edit-form input { flex: 1; }
+.gift-edit-form input:focus, .create-form input:focus, .create-form select:focus { border-color: #87967e; box-shadow: 0 0 0 3px #667a6017; }
+.small-action { border: 0; background: var(--green); color: white; padding: 9px 10px; font: 600 10px 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; }
+.small-action.secondary { border: 1px solid var(--line); background: transparent; color: var(--ink); }
+.small-action:disabled { opacity: .55; cursor: wait; }
+.create-layout { max-width: 660px; min-height: 620px; padding: 54px 0 80px; }
+.back-link { border: 0; background: transparent; color: var(--muted); padding: 0; margin: 0 0 45px; font: 500 12px 'DM Sans', sans-serif; cursor: pointer; }
+.create-layout .eyebrow { margin-bottom: 16px; }
+.create-layout h1 { font-size: clamp(44px, 6vw, 66px); }
+.create-layout > .intro { margin: 18px 0 30px; }
+.create-tabs { display: grid; grid-template-columns: 1fr 1fr; max-width: 430px; border-bottom: 1px solid var(--line); margin-bottom: 26px; }
+.create-form { display: flex; flex-direction: column; gap: 10px; max-width: 520px; }
+.create-form label { margin-top: 8px; color: #4e574d; font-size: 11px; font-weight: 600; }
+.create-form input, .create-form select { width: 100%; }
+.create-form .auth-submit { margin-top: 11px; }
 @media (max-width: 760px) {
   .auth-layout { grid-template-columns: 1fr; gap: 34px; padding: 55px 0 65px; }
   .auth-card { justify-self: stretch; max-width: none; padding: 29px 25px 30px; }
@@ -118,4 +153,11 @@ h1 em, h2 em { color: var(--green); font-weight: 500; }
   .signout-button { padding: 9px 10px; font-size: 10px; }
   .occasion-form-row { flex-direction: column; }
   .occasion-form .auth-submit { width: 100%; }
+  .gift-manager { grid-template-columns: 1fr; gap: 28px; }
+  .occasions-heading { align-items: start; gap: 16px; }
+  .occasions-heading h2 { font-size: 33px; }
+  .create-open-button { min-width: 108px; }
+  .gift-item { flex-wrap: wrap; }
+  .gift-edit-form { flex-wrap: wrap; }
+  .gift-edit-form input { flex-basis: 100%; }
 }
