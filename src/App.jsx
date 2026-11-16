@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase.js'
+import { sendGiftWebhook } from './lib/zapier.js'
 
 const ideas = [
   { number: '01', title: 'Pastebėk mažas užuominas', text: 'Geriausios dovanos dažnai prasideda nuo „kažkada norėčiau…“.' },
@@ -259,6 +260,7 @@ function GiftIdeasHome({ onSignOut, userEmail, notice, onCreate, onClearNotice }
       setGifts((current) => current.map((gift) => gift.id === giftId ? data : gift))
       setEditingGiftId('')
       setEditingGiftTitle('')
+      void sendGiftWebhook('UPDATE', data)
     }
     setSavingGift(false)
   }
@@ -567,12 +569,17 @@ function App() {
               }
             } else {
               const priority = String(formData.get('priority') ?? 'normal')
-              const { error } = await supabase.from('gifts').insert({ occasion_id: occasionForGift, title, priority })
+              const { data, error } = await supabase
+                .from('gifts')
+                .insert({ occasion_id: occasionForGift, title, priority })
+                .select('id, occasion_id, user_id, title, priority, created_at')
+                .single()
               if (error) setCreateError(dataErrorMessage(error, 'Dovanos'))
-              else {
+              else if (data) {
                 setCreateSuccess(`Dovana „${title}“ sėkmingai išsaugota.`)
                 setNotice(`Dovana „${title}“ sėkmingai sukurta.`)
                 setScreen('lists')
+                void sendGiftWebhook('INSERT', data)
               }
             }
             setCreating(false)
