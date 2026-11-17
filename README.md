@@ -31,6 +31,37 @@ Sukūrus arba redagavus dovaną, **React** programa išsaugo pakeitimus **Supaba
 
 **Svarbu:** tarp „Supabase“ ir „Zapier“ nėra tiesioginio ryšio – „Zapier“ užklausą siunčia „React“ programa.
 
+## Kaip paleisti projektą kompiuteryje?
+
+1. Atsisiųskite projektą iš „GitHub“ ir atidarykite jo aplanką terminale.
+2. Įdiekite reikalingus paketus:
+
+```bash
+npm install
+```
+
+3. Projekto pagrindiniame aplanke sukurkite failą `.env.local` ir įrašykite aplinkos kintamuosius **su savo reikšmėmis**:
+
+```dotenv
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+VITE_ZAPIER_WEBHOOK_URL=
+```
+
+- `VITE_SUPABASE_URL` – jūsų „Supabase“ projekto adresas.
+- `VITE_SUPABASE_PUBLISHABLE_KEY` – viešasis „Supabase“ projekto raktas.
+- `VITE_ZAPIER_WEBHOOK_URL` – „Zapier“ automatizacijos užklausų adresas. Be jo dovanos išsaugomos, bet automatizacija neiškviečiama.
+
+4. Paleiskite programą:
+
+```bash
+npm run dev
+```
+
+5. Terminale nurodytą vietinį adresą atidarykite naršyklėje.
+
+**Pastaba:** veikimui reikia paruošto „Supabase“ projekto su autentifikacija, lentelėmis `occasions` ir `gifts` bei jų RLS prieigos taisyklėmis. „Zapier“ automatizacija veikia tik tada, kai ji paskelbta ir aktyvi. Tikrų kintamųjų reikšmių ir slaptų raktų į „GitHub“ nekelkite.
+
 ## Projekto nuorodos
 
 - [Veikianti programa („Vercel“)](https://dovanu-ideju-organizatorius.vercel.app)
