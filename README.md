@@ -62,9 +62,8 @@ npm run dev
 
 **Pastaba:** veikimui reikia paruošto „Supabase“ projekto su autentifikacija, lentelėmis `occasions` ir `gifts` bei jų RLS prieigos taisyklėmis. „Zapier“ automatizacija veikia tik tada, kai ji paskelbta ir aktyvi. Tikrų kintamųjų reikšmių ir slaptų raktų į „GitHub“ nekelkite.
 
-## Projekto nuorodos
+## Projekto nuoroda:
 
 - [Veikianti programa („Vercel“)](https://dovanu-ideju-organizatorius.vercel.app)
-- [Projekto dokumentacija („Notion“)](https://app.notion.com/p/415432c2b6c6811fb31fe9fc9f20000c)
 
 Projektas parengtas mokymosi tikslais.
